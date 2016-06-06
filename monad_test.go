@@ -1,12 +1,9 @@
-# go-errormonad
+package errm
 
-A state monad for error handling in golang
+import (
+	"testing"
+)
 
-## Example
-
-in monad_test.go
-
-```golang
 func TestReadFileBase64JSON(t *testing.T) {
 	m := Return("testdata/test.base64")
 	m = Bind(m, ReadFile)
@@ -19,11 +16,3 @@ func TestReadFileBase64JSON(t *testing.T) {
 	}
 	t.Log(jsonMap)
 }
-```
-
-In the above example, usually, you should write `if err...` four times.
-
-Howerver, by taking advatage of the monad, you only need check once in the end.
-
-
-

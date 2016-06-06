@@ -27,16 +27,24 @@ func Bind(m Monad, f func(Any) Monad) Monad {
 	}
 }
 
-// Base64Decode reads v as string and returns Monad: error -> []byte, error
-func Base64Decode(v Any) Monad {
+// CryptoRandRead reads v as []byte and returns Monad: error -> int, error
+func CryptoRandRead(v Any) Monad {
+	vBytes := v.([]byte)
+	return func(s error) (Any, error) {
+		return rand.Read(vBytes)
+	}
+}
+
+// Base64DecodeString reads v as string and returns Monad: error -> []byte, error
+func Base64DecodeString(v Any) Monad {
 	vString := v.(string)
 	return func(s error) (Any, error) {
 		return base64.StdEncoding.DecodeString(vString)
 	}
 }
 
-// JSONUnMarshal reads v as []byte and returns Monad: error -> map[string]interface{}, error
-func JSONUnMarshal(v interface{}) Monad {
+// JSONUnmarshal reads v as []byte and returns Monad: error -> map[string]interface{}, error
+func JSONUnmarshal(v Any) Monad {
 	vBytes := v.([]byte)
 	return func(s error) (Any, error) {
 		resultMap := make(map[string]interface{})
@@ -45,10 +53,18 @@ func JSONUnMarshal(v interface{}) Monad {
 	}
 }
 
-// ReadFile reads v as []string and returns Monad: error -> []byte, error
-func ReadFile(filename interface{}) Monad {
+// ReadFile reads v as string and returns Monad: error -> []byte, error
+func ReadFile(filename Any) Monad {
 	filenameString := filename.(string)
 	return func(error) (Any, error) {
 		return ioutil.ReadFile(filenameString)
+	}
+}
+
+// BytesToStr reads v as []byte and returns Monad: error -> string, error
+func BytesToStr(v Any) Monad {
+	vBytes := v.([]byte)
+	return func(error) (Any, error) {
+		return string(vBytes), nil
 	}
 }
